@@ -6,7 +6,7 @@ public class ChangeChar{
 		// System.out.println("C:\\Users\\a1003");
 		// System.out.println("他说:\"你好!\"");
 		// System.out.println("123\r45");
-		
+
 		System.out.println("书名\t作者\t价格\t销量\r\n三国\t罗贯中\t120\t1000");
 	}
 }
