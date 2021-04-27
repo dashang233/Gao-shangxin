@@ -37,7 +37,7 @@ public class Operator{
 		boolean flag = a > b;
 		System.out.println(flag);
 		
-		//关系运算符
+		//逻辑运算符
 		int age = 50;
 		if(age > 20 && age < 90){
 			System.out.println("ok1");
@@ -48,5 +48,30 @@ public class Operator{
 			System.out.println("ok2");
 		}
 		System.out.println("a1 = "+a1+" b1 = "+b1);
+		//逻辑非、逻辑异或
+		System.out.println(!(1 > 2)); //true
+		System.out.println((10 > 1)^(3 < 5)); //false
+		
+		//赋值运算符
+		int n1 = 10;
+		n1 /= 4; 
+		System.out.println(n1); //2
+		
+		//三元运算符
+		int n2 = 10;
+		int n3 = 12;
+		int result = n2 > n3 ? ++n2 : --n3;
+		System.out.println(result); //11
+		//利用三元运算符求出最大值
+		int n4 = 55;
+		int n5 = 33;
+		int n6 = 123;
+		int max1 = n4 > n5 ? n4 : n5;
+		int max2 = max1 > n6 ? max1 : n6;
+		System.out.println(max2); //123
+		//一个语句实现：
+		int max = (n4 > n5 ? n4 : n5) > n6 ? (n4 > n5 ? n4 : n5) : n6;
+		System.out.println(max); //123
+		
 	}
 } 
