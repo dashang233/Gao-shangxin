@@ -8,7 +8,7 @@ public class Homework01 {
             }
             int n1 = Integer.parseInt(args[0]);
             int n2 = Integer.parseInt(args[1]);
-            System.out.println(cal(n1, n2));
+            System.out.println("计算结果是："+cal(n1, n2));
         }catch (ArrayIndexOutOfBoundsException e){ //处理抛出的异常
             System.out.println(e.getMessage()); //输出错误信息
         }catch(NumberFormatException e){
@@ -16,8 +16,6 @@ public class Homework01 {
         }catch(ArithmeticException e){
             System.out.println("除数不能为0");
         }
-
-
     }
     public static int cal(int n1, int n2){
         return n1/n2;
