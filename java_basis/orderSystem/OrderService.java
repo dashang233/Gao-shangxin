@@ -13,7 +13,7 @@ public class OrderService {
 
     public static void add(ArrayList a1, ArrayList a2, Member member){ //多个菜品同时下单
         StringBuffer stringBuffer = new StringBuffer(); //菜品详情
-        int workingTime = 0;
+        int workingTime = 0; //保存所有菜品制作时间
         double cost = 0;  //总金额
         double payment = 0; //实际金额
         StringBuffer discountInfo = new StringBuffer(); //折扣信息
@@ -37,11 +37,11 @@ public class OrderService {
             }
             double dishIncome = (dishNum * Dishes.dishes[index].getPrice() * Dishes.dishes[index].getDiscount()) * memberDiscount;
             payment += dishIncome; //实际金额,按照菜品折扣计算
-            Dishes.dishes[index].setIncome(Dishes.dishes[index].getIncome() + dishIncome);//更新对应菜品的价格
+            Dishes.dishes[index].setIncome(Dishes.dishes[index].getIncome() + dishIncome);//更新对应菜品的收益
             if (Dishes.dishes[index].getDiscount() != 1) {
                 discountInfo.append(Dishes.dishes[index].getName() + "：" + Dishes.dishes[index].getDiscount() * 10 + "折");
             }
-            workingTime += 10 * dishNum;
+            workingTime += 10 * dishNum; //菜品计算时间,每道菜10s
         }
 
         order.setDish(stringBuffer);

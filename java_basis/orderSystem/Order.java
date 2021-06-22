@@ -3,27 +3,26 @@ package orderSystem;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Order { //生产订单对象
-    private static int orderCount;
-    private static int queueCount;
-    private int orderNum;
-    private int queueNum;
-    private StringBuffer dish;
-    final LocalDateTime now = LocalDateTime.now();
+public class Order{ //生产订单对象
+    private static int orderCount; //记录订单更新数量
+    private int orderNum; //订单编号
+    private int queueNum; //排队序号，在OrderService的status()方法中更新
+    private StringBuffer dish; //订单信息
+    final LocalDateTime NOW = LocalDateTime.now(); //记录下单时间
     private String startTime;
-    private String orderStatus;
-    private String finishTime;
-    private double cost;
-    private String discountInfo;
-    private double payment;
-    private String memberID;
+    private String orderStatus; //订单状态信息
+    private String finishTime; //订单完成时间
+    private double cost; //订单总金额
+    private String discountInfo; //折扣信息
+    private double payment; //实付款
+    private String memberID; //会员编号
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Order() {
         this.orderNum = ++orderCount;
         this.orderStatus = "待完成";
-        this.startTime = dtf.format(now);
+        this.startTime = dtf.format(NOW);
     }
 
     public int getOrderNum() {
@@ -71,7 +70,7 @@ public class Order { //生产订单对象
     }
 
     public void setFinishTime(int workingTime) {
-        this.finishTime = dtf.format(now.plusSeconds(workingTime)); //每道菜用10s
+        this.finishTime = dtf.format(NOW.plusSeconds(workingTime)); //每道菜用10s
     }
 
     public double getCost() {
@@ -115,8 +114,10 @@ public class Order { //生产订单对象
                 +"\n订单状态：" + orderStatus
                 +"\n订单完成时间" + finishTime
                 +"\n订单总金额：" + cost
-                +"\n折扣信息：" + discountInfo
+                +"\n菜品折扣信息：" + discountInfo
                 +"\n实付款：" + payment
                 +"\n会员信息：" + memberID;
     }
+
+
 }

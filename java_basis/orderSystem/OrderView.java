@@ -3,6 +3,7 @@ package orderSystem;
 import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -22,7 +23,7 @@ public class OrderView {
             System.out.println("6 查看菜品消费情况");
             System.out.println("8 退出");
 
-            System.out.print("请输入选项(1-4)");
+            System.out.print("请输入选项(1-8)");
             key = scanner.nextInt();
             switch(key){
                 case 1:
@@ -87,7 +88,7 @@ public class OrderView {
             }
         }while(true);
         OrderService.add(arrayList1, arrayList2, member);
-        System.out.println(OrderService.getOrders().get(OrderService.getOrders().size()-1));
+        System.out.println(OrderService.getOrders().get(OrderService.getOrders().size()-1)); //输出本次订单信息
 
     }
     public void changeDiscount(){
@@ -150,16 +151,20 @@ public class OrderView {
     }
 
     public void checkSale(){
-        System.out.print("请输入查看菜品编号/名称");
-        String name = scanner.next();
-        int i = 1;
+//        System.out.print("请输入查看菜品编号/名称");
+//        String name = scanner.next();
+//        int i = 1;
+        Arrays.sort(Dishes.dishes); //排序
         for(Dish dish: Dishes.dishes){
-            if(name.equals(dish.getName()) || name.equals(String.valueOf(i))) { //通过菜名或菜品编号查询
-                System.out.println(dish.getName() +"的销售量为："+dish.getSales());
-                System.out.println(dish.getName() +"的实际营收金额为："+dish.getIncome());
-            }
-            i++;
+            dish.print();
         }
+//        for(Dish dish: Dishes.dishes){
+//            if(name.equals(dish.getName()) || name.equals(String.valueOf(i))) { //通过菜名或菜品编号查询
+//                System.out.println(dish.getName() +"的销售量为："+dish.getSales());
+//                System.out.println(dish.getName() +"的实际营收金额为："+dish.getIncome());
+//            }
+//            i++;
+//        }
     }
 
     public void exit(){
