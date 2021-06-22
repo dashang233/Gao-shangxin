@@ -1,0 +1,170 @@
+package orderSystem;
+
+import com.sun.org.apache.xpath.internal.operations.Or;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class OrderView {
+    int key = 0;
+    boolean loop = true;
+    Scanner scanner = new Scanner(System.in);
+    public void mainMenu(){
+        System.out.println("欢迎光临！");
+        do{
+            System.out.println("\n==========点餐系统==========");
+            System.out.println("1 点餐");
+            System.out.println("2 修改折扣");
+            System.out.println("3 查看订单");
+            System.out.println("4 查看菜品剩余供应量");
+            System.out.println("5 查看未完成订单");
+            System.out.println("6 查看菜品消费情况");
+            System.out.println("8 退出");
+
+            System.out.print("请输入选项(1-4)");
+            key = scanner.nextInt();
+            switch(key){
+                case 1:
+                    listDishes();
+                    addOrders();
+                    break;
+                case 2:
+                    changeDiscount();
+                    break;
+                case 3:
+                    findOrder();
+                    break;
+                case 4:
+                    checkLeft();
+                    break;
+                case 5:
+                    checkUndone();
+                    break;
+                case 6:
+                    checkSale();
+                    break;
+                case 8:
+                    exit();
+                    break;
+            }
+        }while(loop);
+    }
+    public void listDishes(){
+        System.out.println("==============主食==============");
+        System.out.printf("%-12s","菜名");
+        System.out.printf("%-12s","价格");
+        System.out.printf("%-12s","折扣");
+        System.out.printf("剩余份数"+"\n");
+        Dish[] dishes = Dishes.dishes;
+        for (int i = 0; i < dishes.length; i++) {
+            System.out.printf("%-15s",(i+1) +" "+dishes[i].getName());
+            System.out.printf("%-15s",dishes[i].getPrice());
+            System.out.printf("%-15s",dishes[i].getDiscount());
+            System.out.printf(dishes[i].getRemain()+"\n");
+        }
+    }
+    public void addOrders(){
+        Member member = logIn(); //接收会员信息
+        ArrayList arrayList1 = new ArrayList(); //菜品序号
+        ArrayList arrayList2 = new ArrayList(); //菜品数量
+        do{
+            System.out.print("请输入菜品序号：");
+            int n1 = scanner.nextInt();
+            System.out.print("请输入菜品数量：");
+            int n2 = scanner.nextInt();
+
+            if(Dishes.dishes[n1-1].getRemain() < n2){ //下单数量需小于菜品剩余数量
+                System.out.print("当前菜品售罄，请重新选择:");
+                continue;
+            }
+
+            arrayList1.add(n1);
+            arrayList2.add(n2);
+            System.out.print("是否继续点菜(y/n):\n");
+            if(scanner.next().equals("n")){
+                break;
+            }
+        }while(true);
+        OrderService.add(arrayList1, arrayList2, member);
+        System.out.println(OrderService.getOrders().get(OrderService.getOrders().size()-1));
+
+    }
+    public void changeDiscount(){
+        System.out.print("请输入管理员密码：");
+        String pwd = scanner.next();
+        if(pwd.equals("111")){
+            System.out.print("请输入打折菜品序号：");
+            int index = scanner.nextInt()-1;
+            System.out.print("请输入折扣：");
+            double discount = scanner.nextDouble();
+            Dishes.dishes[index].setDiscount(discount); //修改折扣
+        }else{
+            System.out.println("密码错误！");
+
+        }
+    }
+
+    public Member logIn(){ //返回会员编号
+        Member[] values = Member.values();
+        System.out.print("\n请输入会员编号");
+        String next = scanner.next();
+        for (int i = 0; i < values.length; i++) {
+            if(values[i].getMemberID().equals(next)){
+                System.out.println("验证成功，欢迎您，尊敬的"+values[i].getLevel()+"会员！");
+                return values[i];
+            }
+        }
+        System.out.println("未查找到会员信息");
+        return null;
+    }
+
+    public void findOrder(){ //查看订单、添加订单均可以更新订单状态
+        OrderService.status();
+        System.out.print("请输入查询编号：");
+        int num = scanner.nextInt()-1;
+        System.out.println(OrderService.getOrders().get(num));
+    }
+
+    public void checkLeft(){
+        System.out.print("请输入查看菜品编号/名称");
+        String name = scanner.next();
+        int i = 1;
+        for(Dish dish: Dishes.dishes){
+            if(name.equals(dish.getName()) || name.equals(String.valueOf(i))) { //通过菜名或菜品编号查询
+                System.out.println(dish.getName() +"剩余"+dish.getRemain() +"份");
+            }
+            i++;
+        }
+    }
+
+    public void checkUndone(){
+        OrderService.status();
+        Iterator iterator = OrderService.getOrders().iterator();
+        while (iterator.hasNext()) {
+            Order order = (Order)iterator.next();
+            if(order.getOderStatus().equals("待完成")){
+                System.out.println(order);
+            }
+        }
+    }
+
+    public void checkSale(){
+        System.out.print("请输入查看菜品编号/名称");
+        String name = scanner.next();
+        int i = 1;
+        for(Dish dish: Dishes.dishes){
+            if(name.equals(dish.getName()) || name.equals(String.valueOf(i))) { //通过菜名或菜品编号查询
+                System.out.println(dish.getName() +"的销售量为："+dish.getSales());
+                System.out.println(dish.getName() +"的实际营收金额为："+dish.getIncome());
+            }
+            i++;
+        }
+    }
+
+    public void exit(){
+        loop = false;
+        System.out.println("退出系统...");
+    }
+
+}
