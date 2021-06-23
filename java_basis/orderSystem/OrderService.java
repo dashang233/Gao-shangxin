@@ -1,5 +1,4 @@
 package orderSystem;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -10,14 +9,17 @@ public class OrderService {
     public static ArrayList getOrders() {
         return orders;
     }
-
+    private static int[] freeDish = new int[12];  //获取12道免费菜品信息
+    public static int[] getFreeDish() {
+        return freeDish;
+    }
     public static void add(ArrayList a1, ArrayList a2, Member member){ //多个菜品同时下单
         StringBuffer stringBuffer = new StringBuffer(); //菜品详情
         int workingTime = 0; //保存所有菜品制作时间
         double cost = 0;  //总金额
         double payment = 0; //实际金额
         StringBuffer discountInfo = new StringBuffer(); //折扣信息
-        double memberDiscount = 1;                      //默认非会员的折扣
+        double memberDiscount = 1;  //默认非会员的折扣
         //创建一个订单对象，并输入对应会员信息
         Order order = new Order();
         if(member == null){ //处理会员订单
@@ -32,9 +34,7 @@ public class OrderService {
             Dishes.dishes[index].setRemain(Dishes.dishes[index].getRemain() - dishNum); //修改剩余份数
             stringBuffer.append(Dishes.dishes[index].getName()+ dishNum + "份\t");
             cost += dishNum * Dishes.dishes[index].getPrice(); //总金额
-            if(cost > 100){
-                stringBuffer.append("金额满100，赠送菜品一份");
-            }
+
             double dishIncome = (dishNum * Dishes.dishes[index].getPrice() * Dishes.dishes[index].getDiscount()) * memberDiscount;
             payment += dishIncome; //实际金额,按照菜品折扣计算
             Dishes.dishes[index].setIncome(Dishes.dishes[index].getIncome() + dishIncome);//更新对应菜品的收益
@@ -43,13 +43,18 @@ public class OrderService {
             }
             workingTime += 10 * dishNum; //菜品计算时间,每道菜10s
         }
+        if(cost > 100){ //判断一个订单所有菜品金额是否超过100
+            int num = (int)(Math.random()*9+3); //每单随机生成[3,11]的整数，作为菜品索引
+            stringBuffer.append("金额满100，赠送"+ Dishes.dishes[num].getName() +"一份");
+            freeDish[num]++; //随机赠的菜品数量加1
+        }
 
         order.setDish(stringBuffer);
         order.setFinishTime(workingTime);
         order.setCost(cost);
         order.setPayment(payment);
         order.setDiscountInfo(discountInfo.toString().equals("") ? "无折扣" : discountInfo.toString());
-
+        order.setWorkingTime(workingTime);
         orders.add(order);
         status(); //顺便更改新添加的订单的排队号
     }

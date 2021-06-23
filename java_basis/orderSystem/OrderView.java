@@ -2,10 +2,7 @@ package orderSystem;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 public class OrderView {
     int key = 0;
@@ -21,7 +18,11 @@ public class OrderView {
             System.out.println("4 查看菜品剩余供应量");
             System.out.println("5 查看未完成订单");
             System.out.println("6 查看菜品消费情况");
-            System.out.println("8 退出");
+            System.out.println("7 查看当天订单统计信息");
+            System.out.println("8 获取近期的爆款菜品");
+            System.out.println("9 统计当天赠送的菜品详情");
+            System.out.println("10 统计每天每单的等待时间（支持排序）、平均等待时间");
+            System.out.println("11 退出");
 
             System.out.print("请输入选项(1-8)");
             key = scanner.nextInt();
@@ -45,7 +46,19 @@ public class OrderView {
                 case 6:
                     checkSale();
                     break;
+                case 7:
+                    orderInfo();
+                    break;
                 case 8:
+                    popDish();
+                    break;
+                case 9:
+                    freeDish();
+                    break;
+                case 10:
+                    waitTime();
+                    break;
+                case 11:
                     exit();
                     break;
             }
@@ -120,14 +133,14 @@ public class OrderView {
         return null;
     }
 
-    public void findOrder(){ //查看订单、添加订单均可以更新订单状态
+    public void findOrder(){ //查看订单、添加订单均可以更新订单完成状态
         OrderService.status();
         System.out.print("请输入查询编号：");
         int num = scanner.nextInt()-1;
         System.out.println(OrderService.getOrders().get(num));
     }
 
-    public void checkLeft(){
+    public void checkLeft(){ //统计菜品的剩余供应量
         System.out.print("请输入查看菜品编号/名称");
         String name = scanner.next();
         int i = 1;
@@ -139,7 +152,7 @@ public class OrderView {
         }
     }
 
-    public void checkUndone(){
+    public void checkUndone(){ //查看当前时刻还没有完成的所有订单
         OrderService.status();
         Iterator iterator = OrderService.getOrders().iterator();
         while (iterator.hasNext()) {
@@ -150,21 +163,58 @@ public class OrderView {
         }
     }
 
-    public void checkSale(){
-//        System.out.print("请输入查看菜品编号/名称");
-//        String name = scanner.next();
-//        int i = 1;
+    public void checkSale(){ //统计每个菜品的消费量和实际营收金额
         Arrays.sort(Dishes.dishes); //排序
         for(Dish dish: Dishes.dishes){
             dish.print();
         }
-//        for(Dish dish: Dishes.dishes){
-//            if(name.equals(dish.getName()) || name.equals(String.valueOf(i))) { //通过菜名或菜品编号查询
-//                System.out.println(dish.getName() +"的销售量为："+dish.getSales());
-//                System.out.println(dish.getName() +"的实际营收金额为："+dish.getIncome());
-//            }
-//            i++;
-//        }
+    }
+
+    public void orderInfo(){ //统计每天总营收金额、订单量、平均每单的消费额、总折扣金额
+        ArrayList orders = OrderService.getOrders(); //接收所有订单对象
+        double revenue = 0; //记录总营收
+        double discount = 0; //记录总折扣金额
+        Iterator iterator = orders.iterator();
+        while (iterator.hasNext()) {
+            Order order = (Order)iterator.next();
+            revenue += order.getPayment();
+            discount += order.getCost()-order.getPayment();
+        }
+        System.out.println("\n==========当天订单信息统计==========");
+        System.out.println("当天总营收金额为："+revenue);
+        System.out.println("当天订单量为：" + orders.size());
+        System.out.println("平均每单销售额：" + (revenue/orders.size()));
+        System.out.println("总折扣金额" + discount);
+
+    }
+
+    public void popDish(){
+
+    }
+
+    public void freeDish(){
+        System.out.println("\n==========当天赠送菜品详情==========");
+        int[] dishes = OrderService.getFreeDish();
+        for (int i = 0; i < dishes.length; i++) {
+            if(dishes[i] != 0){
+                System.out.println(Dishes.dishes[i].getName() + "共赠送" + dishes[i] + "份");
+            }
+        }
+
+    }
+
+    public void waitTime(){
+        System.out.println("\n==========当天订单等待时间统计==========");
+        ArrayList orders = OrderService.getOrders(); //接收所有订单对象
+        Collections.sort(orders); //自定义Order按照排队时间排序
+        double totalWaitTime = 0; //记录总营收
+        Iterator iterator = orders.iterator();
+        while (iterator.hasNext()) { //遍历集合，获取总等待时间
+            Order order = (Order)iterator.next();
+            System.out.println("第"+order.getOrderNum()+"个订单，共等待"+order.getWorkingTime()+"分钟");
+            totalWaitTime += order.getWorkingTime();
+        }
+        System.out.println("订单平均等待时间为：" + totalWaitTime/orders.size());
     }
 
     public void exit(){

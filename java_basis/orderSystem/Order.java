@@ -3,13 +3,14 @@ package orderSystem;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Order{ //生产订单对象
+public class Order implements Comparable{ //生产订单对象
     private static int orderCount; //记录订单更新数量
     private int orderNum; //订单编号
     private int queueNum; //排队序号，在OrderService的status()方法中更新
     private StringBuffer dish; //订单信息
     final LocalDateTime NOW = LocalDateTime.now(); //记录下单时间
-    private String startTime;
+    private String startTime; //同上
+    private int workingTime; //菜品制作时间
     private String orderStatus; //订单状态信息
     private String finishTime; //订单完成时间
     private double cost; //订单总金额
@@ -23,6 +24,14 @@ public class Order{ //生产订单对象
         this.orderNum = ++orderCount;
         this.orderStatus = "待完成";
         this.startTime = dtf.format(NOW);
+    }
+
+    public int getWorkingTime() {
+        return workingTime;
+    }
+
+    public void setWorkingTime(int workingTime) {
+        this.workingTime = workingTime;
     }
 
     public int getOrderNum() {
@@ -119,5 +128,9 @@ public class Order{ //生产订单对象
                 +"\n会员信息：" + memberID;
     }
 
-
+    @Override
+    public int compareTo(Object o) {
+        Order order = (Order)o;
+        return this.getWorkingTime() - order.getWorkingTime();
+    }
 }
