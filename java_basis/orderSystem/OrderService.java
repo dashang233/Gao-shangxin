@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class OrderService {
     private static ArrayList orders = new ArrayList(); //保存订单对象
-    Member[] values = Member.values(); //获取会员信息
     public static ArrayList getOrders() {
         return orders;
     }
@@ -13,7 +12,7 @@ public class OrderService {
     public static int[] getFreeDish() {
         return freeDish;
     }
-    public static void add(ArrayList a1, ArrayList a2, Member member){ //多个菜品同时下单
+    public static void add(ArrayList a1, ArrayList a2, Member member){ //一个人的订单调用一次方法，多个菜品同时下单
         StringBuffer stringBuffer = new StringBuffer(); //菜品详情
         int workingTime = 0; //保存所有菜品制作时间
         double cost = 0;  //总金额
@@ -46,9 +45,10 @@ public class OrderService {
         if(cost > 100){ //判断一个订单所有菜品金额是否超过100
             int num = (int)(Math.random()*9+3); //每单随机生成[3,11]的整数，作为菜品索引
             stringBuffer.append("金额满100，赠送"+ Dishes.dishes[num].getName() +"一份");
-            freeDish[num]++; //随机赠的菜品数量加1
+            freeDish[num]++; //所有订单中，随机赠的菜品数量加1
         }
 
+        //设置一个订单的各属性
         order.setDish(stringBuffer);
         order.setFinishTime(workingTime);
         order.setCost(cost);
@@ -58,8 +58,8 @@ public class OrderService {
         orders.add(order);
         status(); //顺便更改新添加的订单的排队号
     }
-    public static void status(){
-        ArrayList toBeFinish = new ArrayList();
+    public static void status(){ //添加订单、查询订单均调用此方法实现自动更新状态
+        ArrayList toBeFinish = new ArrayList(); //保存未完成的订单
         for (Object order : orders){
             if (!((Order) order).getOderStatus().equals("待完成")){//不是待完成，就下一个
                 continue;

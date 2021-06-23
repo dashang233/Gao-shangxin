@@ -10,7 +10,7 @@ public class OrderView {
     Scanner scanner = new Scanner(System.in);
     public void mainMenu(){
         System.out.println("欢迎光临！");
-        do{
+        do{ //执行一次代表一个人点餐
             System.out.println("\n==========点餐系统==========");
             System.out.println("1 点餐");
             System.out.println("2 修改折扣");
@@ -82,7 +82,7 @@ public class OrderView {
         Member member = logIn(); //接收会员信息
         ArrayList arrayList1 = new ArrayList(); //菜品序号
         ArrayList arrayList2 = new ArrayList(); //菜品数量
-        do{
+        do{ //接收一次点餐的各菜品及数量
             System.out.print("请输入菜品序号：");
             int n1 = scanner.nextInt();
             System.out.print("请输入菜品数量：");
@@ -104,7 +104,7 @@ public class OrderView {
         System.out.println(OrderService.getOrders().get(OrderService.getOrders().size()-1)); //输出本次订单信息
 
     }
-    public void changeDiscount(){
+    public void changeDiscount(){ //管理员修改折扣，一次程序运行中有效
         System.out.print("请输入管理员密码：");
         String pwd = scanner.next();
         if(pwd.equals("111")){
@@ -119,7 +119,7 @@ public class OrderView {
         }
     }
 
-    public Member logIn(){ //返回会员编号
+    public Member logIn(){ //返回会员对象
         Member[] values = Member.values();
         System.out.print("\n请输入会员编号");
         String next = scanner.next();
@@ -189,7 +189,10 @@ public class OrderView {
     }
 
     public void popDish(){
-
+        Dish[] dishes = Dishes.dishes;
+        Arrays.sort(dishes);
+        System.out.println("\n==========爆款菜品==========");
+        System.out.println("近期爆款菜品为:"+ dishes[0].getName() +", 共销售"+ dishes[0].getSales()+"份");
     }
 
     public void freeDish(){
@@ -207,7 +210,7 @@ public class OrderView {
         System.out.println("\n==========当天订单等待时间统计==========");
         ArrayList orders = OrderService.getOrders(); //接收所有订单对象
         Collections.sort(orders); //自定义Order按照排队时间排序
-        double totalWaitTime = 0; //记录总营收
+        double totalWaitTime = 0; //记录总等待时间
         Iterator iterator = orders.iterator();
         while (iterator.hasNext()) { //遍历集合，获取总等待时间
             Order order = (Order)iterator.next();

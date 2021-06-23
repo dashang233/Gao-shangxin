@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Order implements Comparable{ //生产订单对象
-    private static int orderCount; //记录订单更新数量
+
+    private static int orderCount; //记录订单更新数量，所有订单共享
+
     private int orderNum; //订单编号
     private int queueNum; //排队序号，在OrderService的status()方法中更新
     private StringBuffer dish; //订单信息
@@ -16,7 +18,7 @@ public class Order implements Comparable{ //生产订单对象
     private double cost; //订单总金额
     private String discountInfo; //折扣信息
     private double payment; //实付款
-    private String memberID; //会员编号
+    private String memberID; //会员信息
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
