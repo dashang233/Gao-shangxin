@@ -4,6 +4,7 @@ public class Override01 {
         System.out.println(person.say());
         Student jerry = new Student("Jerry", 20, "1008611", 99.8);
         System.out.println(jerry.say());
+        System.out.println((int)(Math.random()*16)+1);
     }
 }
 class Person{

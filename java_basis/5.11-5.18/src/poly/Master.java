@@ -11,8 +11,9 @@ public class Master {
         master.feed1(new Cat());
 
         Animal animal = new Cat();
-        Cat cat = (Cat)animal;
-        cat.say();
+        System.out.println(animal.age);
+//        Cat cat = (Cat)animal;
+//        cat.say();
     }
     public void feed1(Animal animal){
         animal.feed();
