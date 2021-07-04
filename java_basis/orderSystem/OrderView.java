@@ -10,59 +10,93 @@ public class OrderView {
     Scanner scanner = new Scanner(System.in);
     public void mainMenu(){
         System.out.println("欢迎光临！");
-        do{ //执行一次代表一个人点餐
-            System.out.println("\n==========点餐系统==========");
-            System.out.println("1 点餐");
-            System.out.println("2 修改折扣");
-            System.out.println("3 查看订单");
-            System.out.println("4 查看菜品剩余供应量");
-            System.out.println("5 查看未完成订单");
-            System.out.println("6 查看菜品消费情况");
-            System.out.println("7 查看当天订单统计信息");
-            System.out.println("8 获取近期的爆款菜品");
-            System.out.println("9 统计当天赠送的菜品详情");
-            System.out.println("10 统计每天每单的等待时间（支持排序）、平均等待时间");
-            System.out.println("11 退出");
+        System.out.println("请问您是：管理员/用户？");
+        String identification = scanner.next();
+        if(identification.equals("管理员")){
+            do{
+                System.out.print("请输入管理员密码：");
+                String pwd = scanner.next();
+                if(pwd.equals("111")) {
+                    System.out.println("登录成功！");
+                    break;
+                }else{
+                    System.out.print("密码错误,是否继续登录(y / n)?");
+                    String next = scanner.next();
+                    if(next.equals("n")){
+                        return;
+                    }
+                }
+            }while(true);
 
-            System.out.print("请输入选项(1-8)");
-            key = scanner.nextInt();
-            switch(key){
-                case 1:
-                    listDishes();
-                    addOrders();
-                    break;
-                case 2:
-                    changeDiscount();
-                    break;
-                case 3:
-                    findOrder();
-                    break;
-                case 4:
-                    checkLeft();
-                    break;
-                case 5:
-                    checkUndone();
-                    break;
-                case 6:
-                    checkSale();
-                    break;
-                case 7:
-                    orderInfo();
-                    break;
-                case 8:
-                    popDish();
-                    break;
-                case 9:
-                    freeDish();
-                    break;
-                case 10:
-                    waitTime();
-                    break;
-                case 11:
-                    exit();
-                    break;
-            }
-        }while(loop);
+            do{ //管理员操作
+                System.out.println("\n==========点餐系统==========");
+                System.out.println("1 修改折扣");
+                System.out.println("2 查看菜品剩余供应量");
+                System.out.println("3 查看未完成订单");
+                System.out.println("4 查看菜品消费情况");
+                System.out.println("5 查看当天订单统计信息");
+                System.out.println("6 统计当天赠送的菜品详情");
+                System.out.println("7 统计每天每单的等待时间（支持排序）、平均等待时间");
+                System.out.println("8 退出");
+
+                System.out.print("请输入选项(1-8)");
+                key = scanner.nextInt();
+                switch(key){
+                    case 1:
+                        listDishes();
+                        changeDiscount();
+                        break;
+                    case 2:
+                        checkLeft();
+                        break;
+                    case 3:
+                        checkUndone();
+                        break;
+                    case 4:
+                        checkSale();
+                        break;
+                    case 5:
+                        orderInfo();
+                        break;
+                    case 6:
+                        freeDish();
+                        break;
+                    case 7:
+                        waitTime();
+                        break;
+                    case 8:
+                        exit();
+                        break;
+                }
+            }while(loop);
+        }else{
+            do{ //执行一次代表一个人点餐
+                System.out.println("\n==========点餐系统==========");
+                System.out.println("1 点餐");
+                System.out.println("2 查看订单");
+                System.out.println("3 获取近期的爆款菜品");
+                System.out.println("4 退出");
+
+                System.out.print("请输入选项(1-11)");
+                key = scanner.nextInt();
+                switch(key){
+                    case 1:
+                        listDishes();
+                        addOrders();
+                        break;
+                    case 2:
+                        findOrder();
+                        break;
+                    case 3:
+                        popDish();
+                        break;
+                    case 4:
+                        exit();
+                        break;
+                }
+            }while(loop);
+        }
+
     }
     public void listDishes(){
         System.out.println("==============主食==============");
@@ -105,18 +139,11 @@ public class OrderView {
 
     }
     public void changeDiscount(){ //管理员修改折扣，一次程序运行中有效
-        System.out.print("请输入管理员密码：");
-        String pwd = scanner.next();
-        if(pwd.equals("111")){
-            System.out.print("请输入打折菜品序号：");
-            int index = scanner.nextInt()-1;
-            System.out.print("请输入折扣：");
-            double discount = scanner.nextDouble();
-            Dishes.dishes[index].setDiscount(discount); //修改折扣
-        }else{
-            System.out.println("密码错误！");
-
-        }
+        System.out.print("请输入打折菜品序号：");
+        int index = scanner.nextInt()-1;
+        System.out.print("请输入折扣：");
+        double discount = scanner.nextDouble();
+        Dishes.dishes[index].setDiscount(discount); //修改折扣
     }
 
     public Member logIn(){ //返回会员对象
