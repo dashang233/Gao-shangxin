@@ -1,57 +1,51 @@
 package homework;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import javax.lang.model.element.VariableElement;
+import java.util.Scanner;
 
 public class Homework01 {
     public static void main(String[] args) {
-        ArrayList arrayList = new ArrayList();
-        boolean indian = arrayList.add(new News("新冠病例确诊千万，印度信徒赴恒河圣浴引民众担忧"));
-        boolean man = arrayList.add(new News("捞鱼放生"));
-        for (int i = arrayList.size()-1; i >= 0 ; i--) {
-            News news = (News)arrayList.get(i);
-            System.out.println(subTitle(news.getTitle()));
-        }
-
-    }
-    public static String subTitle(String title){
-        if (title == null){
-            return "";
-        }
-        if(title.length()>15){
-            return title.substring(0,15) + "...";
-        }
-        return title;
+        Integer01 integer01 = new Integer01();
+        Thread thread = new Thread(integer01);
+        thread.start();
+        Command command = new Command(integer01); //B线程获取A的对象
+        Thread thread1 = new Thread(command);
+        thread1.start();
     }
 }
-class News{
-    private String title;
-    private String content;
+class Integer01 implements Runnable{
+    private boolean loop = true;
 
-    public News(String title) {
-        this.title = title;
-    }
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 
     @Override
-    public String toString() {
-        if(title.length() > 15){
-            return "title=" + title.substring(0,15) + "..."; //前闭后开
+    public void run() {
+        do{
+            System.out.println((int)(Math.random()*100+1)); //1-100的整数
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }while (loop);
+    }
+}
+class Command implements Runnable{
+    Scanner scanner = new Scanner(System.in);
+    private Integer01 integer01;
+
+    public Command(Integer01 integer01) {
+        this.integer01 = integer01;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("输入Q表示退出");
+        char c = scanner.next().toUpperCase().charAt(0); //字符转为大写
+        if (c == 'Q') {
+            integer01.setLoop(false);
         }
-        return "title=" + title ;
     }
 }
